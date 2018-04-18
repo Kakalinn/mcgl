@@ -122,7 +122,7 @@ int main()
 			sizing = 1;
 			length++;
 			score++;
-			while (f[candyi][candyj])
+			while (f[candyi][candyj] || (candyi == headi && candyj == headj))
 			{
 				candyi = rand()%16;
 				candyj = rand()%32;
