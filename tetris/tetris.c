@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <curses.h>
 #include <time.h>
@@ -70,6 +71,7 @@ int escPress          = 0;
 int quit              = 0;
 long leftTime         = 0;
 long rightTime        = 0;
+int black_and_white   = 1;
 int linescores[]      = {400, 600, 2000, 9000};
 int pieceBag[]        = {0, 1, 2, 3, 4, 5, 6};
 int high_score[]      = {0, 0, 0, 0, 0, 0};
@@ -91,24 +93,39 @@ int pieces_height     = 2;
 int pieces_width      = 4;
 int*** pieces;
 
-int main()
+int main(int argc, char** argv)
 {
 	int i, j;
+
+	for (i = 1; i < argc; i++)
+	{
+		if (!strcmp(argv[i], "-c"))
+		{
+			black_and_white = 0;
+		}
+		else if (!strcmp(argv[i], "-h"))
+		{
+			printf("To run in color mode:\n  %s -c\n", argv[0]);
+			return 0;
+		}
+	}
+
+	srand(time(0));
 	WINDOW* win = initscr();
 	curs_set(0);
 	noecho();
 	halfdelay(1);
 
-	if (has_colors())
+	if (!black_and_white)
 	{
 		start_color();
-		init_pair(0, COLOR_GREEN, COLOR_BLACK);
-		init_pair(1, COLOR_RED, COLOR_BLACK);
-		init_pair(2, COLOR_BLUE, COLOR_BLACK);
-		init_pair(3, COLOR_CYAN, COLOR_BLACK);
-		init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
-		init_pair(5, COLOR_YELLOW, COLOR_BLACK);
-		init_pair(6, COLOR_WHITE, COLOR_BLACK);
+		init_pair(1, COLOR_GREEN, COLOR_BLACK);
+		init_pair(2, COLOR_RED, COLOR_BLACK);
+		init_pair(3, COLOR_BLUE, COLOR_BLACK);
+		init_pair(4, COLOR_CYAN, COLOR_BLACK);
+		init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+		init_pair(6, COLOR_YELLOW, COLOR_BLACK);
+		init_pair(7, COLOR_WHITE, COLOR_BLACK);
 	}
 
 	height       = 24;
@@ -126,7 +143,7 @@ int main()
 	pieces[0][1][1] = 0;
 	pieces[0][1][2] = 0;
 	pieces[0][1][3] = 0;
-	
+
 	pieces[1][0][0] = 1;
 	pieces[1][0][1] = 3;
 	pieces[1][0][2] = 1;
@@ -144,7 +161,7 @@ int main()
 	pieces[2][1][1] = 1;
 	pieces[2][1][2] = 0;
 	pieces[2][1][3] = 0;
-	
+
 	pieces[3][0][0] = 1;
 	pieces[3][0][1] = 3;
 	pieces[3][0][2] = 0;
@@ -153,7 +170,7 @@ int main()
 	pieces[3][1][1] = 1;
 	pieces[3][1][2] = 1;
 	pieces[3][1][3] = 0;
-	
+
 	pieces[4][0][0] = 0;
 	pieces[4][0][1] = 3;
 	pieces[4][0][2] = 1;
@@ -189,13 +206,13 @@ int main()
 	gameColor  = alloc_2d_int_array(height + 1, width);
 
 	for (i = 0; i < height; i++)
-	for (j = 0; j < width; j++)
-	{
-		game[i][j] = 0;
-		gameShadow[i][j] = 0;
-		game_temp[i][j] = 0;
-		gameColor[i][j] = 0;
-	}
+		for (j = 0; j < width; j++)
+		{
+			game[i][j] = 0;
+			gameShadow[i][j] = 0;
+			game_temp[i][j] = 0;
+			gameColor[i][j] = 0;
+		}
 
 	for (i = 0; i < width; i++)
 	{
@@ -238,14 +255,14 @@ void game_mode()
 		int cc = 0;
 
 		if (checkBottom())
-	   	{
+		{
 			fillColor();
-		   	currentpiece = nextpiece;
-		   	nextpiece = choose(); 
+			currentpiece = nextpiece;
+			nextpiece = choose(); 
 			pieceColor = currentpiece + 1;
-		   	nextPieceColor = nextpiece + 1;
-		   	fill();
-		   	if (gameOver())
+			nextPieceColor = nextpiece + 1;
+			fill();
+			if (gameOver())
 			{
 				break;
 			}
@@ -314,13 +331,11 @@ void game_mode()
 			cmove = getch();
 			if (cmove == 'q')
 			{
-				mvaddch(10, 10, 'B');
 				levelNumber = 20;
 			}
 
 			if (!spacePress && cmove == ' ')
 			{
-				mvaddch(10, 10, 'B');
 				while(!checkBottom())
 				{
 					moveDown();
@@ -348,18 +363,14 @@ void game_mode()
 
 			if (cmove == 'k')
 			{
-				mvaddch(10, 10, 'D');
 				cc += 15;
 				increase_score(1 + levelNumber);
 			}
 
 			if (cmove == 'p')
 			{
-				mvaddch(10, 10, 'P');
 				/* DO PAUSE IS EZ I KNOW HAUH */
 			}
-
-			refresh(); /* TODO DELETE */
 
 			cc++;
 			if (cmove != ' ')
@@ -816,7 +827,6 @@ int choose()
 	return pieceBag[pieceBagRunner++];
 }
 
-/* */
 void findShadow()
 {
 	int i, j;
@@ -827,18 +837,6 @@ void findShadow()
 
 	int pieceWidth  = gamepieceX1 - gamepieceX0 + 1;
 	int pieceHeight = gamepieceY1 - gamepieceY0 + 1;
-
-	/* 
-	   for (i = 0; i < height; i++)
-	   {
-	   for (j = 0; j < width;  j++)
-	   {
-	   printf("%d", gameShadow[i][j]);
-	   gameShadow[i][j] = 0;
-	   }
-	   printf("\n");
-	   }
-	/* */
 
 	if (gamepieceX0 == -1) return;
 	if (gamepieceX1 == -1) return;
@@ -871,20 +869,8 @@ void findShadow()
 			if  (piece[i][j] == 1 || piece[i][j] == 3)
 				gameShadow[gamepieceY0 + min + i][gamepieceX0 + j] = 1;
 
-	/* 
-	   for (i = 0; i < height; i++)
-	   {
-	   for (j = 0; j < width;  j++)
-	   {
-	   printf("%d", gameShadow[i][j]);
-	   }
-	   printf("\n");
-	   }
-	/* */
 }
-/* */
 
-/* CHAGNED */
 int findLengthDown(int y, int x)
 {
 	int i;
@@ -908,25 +894,6 @@ void removeLines()
 		game[0][i] = 0;
 }
 
-/*
-   int checkLines()
-   {
-   int i, j;
-   for (i = 0; i < height; i++)
-   {
-   int test = 1;
-
-   for (j = 0; j < width; j++)
-   test = test && game[i][j] == 2;
-
-   if  (test) return i;
-   }
-
-   return -1;
-   }
-/* */
-
-/* CHANGED */
 int checkLines()
 {
 	int i, j;
@@ -954,8 +921,6 @@ int checkBottom()
 	return 0;
 }
 
-/* TODO */
-/* Betra að hafa insert-flag en nenni ekki núna */
 int checkOnes()
 {
 	int i, j;
@@ -990,8 +955,8 @@ void drawScore()
 
 void drawBoard()
 {
-	move(0, 0);
 	change_color_from_palette(6);
+	move(0, 0);
 	printw("    xxxxxxxxxxxxxxxx    \n");
 	printw(" xxxxxxxxxxxxxxxxxxxxxx \n");
 	printw("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
@@ -1070,7 +1035,10 @@ void drawPieces()
 
 void change_color_from_palette(int i)
 {
-	attron(COLOR_PAIR(i + 1));
+	if (!black_and_white)
+	{
+		attron(COLOR_PAIR(i + 1));
+	}
 }
 
 int** alloc_2d_int_array(int s1, int s2)
