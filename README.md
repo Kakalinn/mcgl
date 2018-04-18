@@ -1,0 +1,1 @@
+Minimum Curses Game Library

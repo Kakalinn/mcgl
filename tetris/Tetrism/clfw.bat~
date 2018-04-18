@@ -1,0 +1,1 @@
+gcc %1 -o %2 %3 c:/mingw/include/glfw/deps/glad.c -lglfw3 -lopengl32 -lgdi32

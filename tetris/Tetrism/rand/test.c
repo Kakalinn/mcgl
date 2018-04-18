@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include "gen_rand.h"
+
+
+int main()
+{
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+	printf("%d\n", gen_rand());
+
+	return 0;
+}

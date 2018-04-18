@@ -1,0 +1,19 @@
+#ifndef WRAPPER_GEN_RAND
+#define WRAPPER_GEN_RAND
+
+unsigned int gen_rand_seed;
+
+
+void gen_srand(unsigned int a)
+{
+	gen_rand_seed = a;
+}
+
+unsigned int gen_rand()
+{
+	gen_rand_seed = (gen_rand_seed << 13) ^ gen_rand_seed;
+	gen_rand_seed = ((gen_rand_seed*(gen_rand_seed*gen_rand_seed*15731*789221) + 1376312589) & 0x7fffffff);
+	return gen_rand_seed;
+}
+
+#endif
