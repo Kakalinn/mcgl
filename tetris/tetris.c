@@ -4,6 +4,14 @@
 #include <curses.h>
 #include <time.h>
 
+#ifdef __MINGW32__
+#include <malloc.h>
+#else
+#include <alloca.h>
+#endif
+
+
+
 #define LOWER_BORDER 2
 #define UPPER_BORDER 2
 #define RIGHT_BORDER 7
@@ -130,7 +138,16 @@ int main(int argc, char** argv)
 	pieceColor        = currentpiece + 1;
 	nextPieceColor    = nextpiece + 1;
 
-	pieces     = alloc_3d_int_array(7, 2, 4);
+	pieces = alloca(7*sizeof(int**));
+	for (i = 0; i < 7; i++)
+	{
+		pieces[i] = alloca(2*sizeof(int*));
+		for (j = 0; j < 2; j++)
+		{
+			pieces[i][j] = alloca(4*sizeof(int));
+		}
+	}
+
 	pieces[0][0][0] = 1;
 	pieces[0][0][1] = 3;
 	pieces[0][0][2] = 1;
@@ -194,12 +211,18 @@ int main(int argc, char** argv)
 	pieces[6][1][2] = 1;
 	pieces[6][1][3] = 0;
 
+	game = alloca((height + 1)*sizeof(int*));
+	game_temp = alloca((height + 1)*sizeof(int*));
+	gameShadow = alloca((height + 1)*sizeof(int*));
+	gameColor = alloca((height + 1)*sizeof(int*));
 
-
-	game       = alloc_2d_int_array(height + 1, width);
-	game_temp  = alloc_2d_int_array(height + 1, width);
-	gameShadow = alloc_2d_int_array(height + 1, width);
-	gameColor  = alloc_2d_int_array(height + 1, width);
+	for (i = 0; i <= height; i++)
+	{
+		game[i] = alloca(width*sizeof(int));
+		game_temp[i] = alloca(width*sizeof(int));
+		gameShadow[i] = alloca(width*sizeof(int));
+		gameColor[i] = alloca(width*sizeof(int));
+	}
 
 	for (i = 0; i < height; i++)
 		for (j = 0; j < width; j++)
@@ -223,11 +246,6 @@ int main(int argc, char** argv)
 	clear();
 	endwin();
 	refresh();
-	free_3d_int_array(pieces, 2, 4);
-	free_2d_int_array(game, width);
-	free_2d_int_array(game_temp, width);
-	free_2d_int_array(game, width);
-	free_2d_int_array(gameColor, width);
 }
 
 void game_mode()
