@@ -15,7 +15,6 @@ void play();
 void clearShadow();
 void removeLinesColor();
 void fillColor();
-char cmove;
 int find3y_(int game_[stack_arr_s1][stack_arr_s2]);
 int find3x_(int game_[stack_arr_s1][stack_arr_s2]);
 int find3y_game();
@@ -49,49 +48,46 @@ void free_2d_int_array(int** a, int s1);
 void free_3d_int_array(int*** a, int s1, int s2);
 int gameOver();
 void change_color_from_palette(int i);
-void get_high_scores();
-void save_high_scores();
-void increase_score(int a);
-void get_commands();
 void game_mode();
 
 
-int height;
-int width;
-int level             = 100;
-int lines             = 10;
-int linesTotal        = 200;
-int levelNumber       = 0;
-int lines_to_go;
-int pieceBagRunner    = 100;
-int upPress           = 0;
-int downPress         = 0;
-int spacePress        = 0;
-int escPress          = 0;
-int quit              = 0;
-long leftTime         = 0;
-long rightTime        = 0;
-int black_and_white   = 1;
-int linescores[]      = {400, 600, 2000, 9000};
-int pieceBag[]        = {0, 1, 2, 3, 4, 5, 6};
-int high_score[]      = {0, 0, 0, 0, 0, 0};
-int score_loc;
-int nextpiece;
-int currentpiece;
-int pieceColor;
-int nextPieceColor;
-int tetrisBonus       = 0;
-int checkLinesLine    = 0;
-int** gameShadow;
-int** game;
-int** gameColor;
-int** rotate_piece;
-int** rotate_temp;
-int** game_temp;
-int pieces_count      = 7;
-int pieces_height     = 2;
-int pieces_width      = 4;
+int    height;
+int    width;
+int    level             = 100;
+int    lines             = 10;
+int    linesTotal        = 200;
+int    levelNumber       = 0;
+int    lines_to_go;
+int    pieceBagRunner    = 100;
+char   cmove;
+int    upPress           = 0;
+int    downPress         = 0;
+int    spacePress        = 0;
+int    escPress          = 0;
+int    quit              = 0;
+long   leftTime          = 0;
+long   rightTime         = 0;
+int    black_and_white   = 1;
+int    linescores[]      = {400, 600, 2000, 9000};
+int    pieceBag[]        = {0, 1, 2, 3, 4, 5, 6};
+int    high_score[]      = {0, 0, 0, 0, 0, 0};
+int    nextpiece;
+int    currentpiece;
+int    pieceColor;
+int    nextPieceColor;
+int    checkLinesLine    = 0;
+int**  gameShadow;
+int**  game;
+int**  gameColor;
+int**  rotate_piece;
+int**  rotate_temp;
+int**  game_temp;
+int    pieces_count      = 7;
+int    pieces_height     = 2;
+int    pieces_width      = 4;
 int*** pieces;
+
+WINDOW* win;
 
 int main(int argc, char** argv)
 {
@@ -111,7 +107,7 @@ int main(int argc, char** argv)
 	}
 
 	srand(time(0));
-	WINDOW* win = initscr();
+	win = initscr();
 	curs_set(0);
 	noecho();
 	halfdelay(1);
@@ -250,6 +246,12 @@ void game_mode()
 	linesTotal   = 200;
 	levelNumber  = 0;
 
+	int line_score[4];
+	line_score[0] = 0;
+	line_score[1] = 0;
+	line_score[2] = 0;
+	line_score[3] = 0;
+
 	while (!gameOver() && levelNumber < 20)
 	{
 		int cc = 0;
@@ -272,26 +274,15 @@ void game_mode()
 			moveDown();
 		}
 
+		int lines_removed = 0;
 		for (i = 0; i < 4; i++)
 		{
 			if (checkLines() != -1)
 			{
-				if (tetrisBonus)
-				{
-					increase_score(12000*levelNumber);
-				}
+				lines_removed++;
 				checkLinesLine = checkLines();
 				removeLines();
 				removeLinesColor();
-				increase_score(linescores[i]*(1 + levelNumber));
-				if (i == 3)
-				{
-					tetrisBonus = 1;
-				}
-				else
-				{
-					tetrisBonus = 0;
-				}
 				linesTotal--;
 				if (linesTotal%10 > lines || linesTotal%10 == 0)
 				{
@@ -307,6 +298,10 @@ void game_mode()
 					lines = 0;
 				}
 			}
+		}
+		if (lines_removed != 0)
+		{
+			line_score[lines_removed - 1]++;
 		}
 
 
@@ -339,7 +334,6 @@ void game_mode()
 				while(!checkBottom())
 				{
 					moveDown();
-					increase_score(8*(1 + levelNumber));
 				}
 				spacePress = 1;
 				break;
@@ -364,7 +358,6 @@ void game_mode()
 			if (cmove == 'k')
 			{
 				cc += 15;
-				increase_score(1 + levelNumber);
 			}
 
 			if (cmove == 'p')
@@ -387,6 +380,69 @@ void game_mode()
 			}
 		}
 	}
+
+	mvprintw(4, 1, "+------------------------+");
+	mvprintw(5, 1, "|                        |");
+	mvprintw(6, 1, "|                        |");
+	mvprintw(7, 1, "|                        |");
+	mvprintw(8, 1, "|                        |");
+	mvprintw(9, 1, "|                        |");
+	mvprintw(10, 1, "|                        |");
+	mvprintw(11, 1, "+------------------------+");
+
+
+
+	mvprintw(5, 2, " 1 line  X %d", line_score[0]);
+	mvprintw(6, 2, "+2 lines X %d", line_score[1]);
+	mvprintw(7, 2, "+3 lines X %d", line_score[2]);
+	mvprintw(8, 2, "+4 lines X %d", line_score[3]);
+	mvprintw(9, 2, "--------------------");
+	mvprintw(10, 2, "           %d", line_score[0] + line_score[1]*50 + line_score[2]*200 + line_score[3]*4000);
+	refresh();
+
+	char c;
+	while (1)
+	{
+		c = getch();
+
+		if (c == ' ')
+		{
+			break;
+		}
+	}
+
+	/*
+	printw("    xxxxxxxxxxxxxxxx    \n");
+	printw(" xxxxxxxxxxxxxxxxxxxxxx \n");
+	printw("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
+	printw("x                      x           x\n");
+	printw("x                      x           x\n");
+	printw("x  1 line  X 999999    x           x\n");
+	printw("x +2 lines X 999999    x           x\n");
+	printw("x +3 lines X 999999    x           x\n");
+	printw("x +4 lines X 999999    xxxxxxxxxxxxx\n");
+	printw("x  ----------------    xxxx\n");
+	printw("x                      xx\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("x                      x\n");
+	printw("xxxxxxxxxxxxxxxxxxxxxxxx\n");
+	printw(" xxxxxxxxxxxxxxxxxxxxxx \n");
+	printw("    xxxxxxxxxxxxxxxx    \n");
+	*/
 }
 
 void clearShadow()
@@ -1090,18 +1146,4 @@ int gameOver()
 	if (game[height - 1][0] == 9) return 1;
 
 	return 0;
-}
-
-void increase_score(int a)
-{
-	high_score[score_loc] += a;
-
-	while (score_loc > 0 && high_score[score_loc - 1] < high_score[score_loc])
-	{
-		int tmp = high_score[score_loc - 1];
-		high_score[score_loc - 1] = high_score[score_loc];
-		high_score[score_loc] = tmp;
-
-		score_loc--;
-	}
 }

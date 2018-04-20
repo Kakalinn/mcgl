@@ -360,6 +360,25 @@ int main()
 		}
 
 	}
+
+	if (givensc == 81)
+	{
+		mvprintw(3, 4, " +~~~~~~~~~~~~~~+");
+		mvprintw(4, 4, "/ WINNER WINNER  \\");
+		mvprintw(5, 4, "\\ CHICKEN DINNER /");
+		mvprintw(6, 4, " +~~~~~~~~~~~~~~+");
+	}
+	else
+	{
+		mvprintw(3, 4, " +~~~~~~~~~~~~~~+");
+		mvprintw(4, 4, "/   GAME OVER!   \\");
+		mvprintw(5, 4, "\\                /");
+		mvprintw(6, 4, " +~~~~~~~~~~~~~~+");
+	}
+	refresh();
+	getch();
+
+
 	clear();
 	refresh();
 	endwin();
