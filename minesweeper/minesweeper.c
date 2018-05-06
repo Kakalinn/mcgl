@@ -398,5 +398,5 @@ int main(int argc, char** argv)
 	clear();
 	refresh();
 	endwin();
-	refresh();
+	//refresh();
 }

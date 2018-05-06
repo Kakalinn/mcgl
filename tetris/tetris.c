@@ -245,8 +245,10 @@ int main(int argc, char** argv)
 
 	clear();
 	endwin();
-	refresh();
+	//refresh();
 }
+
+
 
 void game_mode()
 {
