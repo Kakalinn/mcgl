@@ -68,9 +68,11 @@ int main(int argc, char** argv)
 {
 	srand(time(0));
 	int i, j;
+	int x, y;
 	int ic = 8;
 	int jc = 8;
 	int bc = 10;
+	int left_pad, top_pad;
 
 	for (i = 1; i < argc; i++)
 	{
@@ -180,6 +182,10 @@ int main(int argc, char** argv)
 
 	WINDOW* win = initscr();
 	noecho();
+	getmaxyx(win, y, x);
+
+	top_pad  = y/2 - 9;
+	left_pad = x/2 - 9;
 
 	if (!black_and_white)
 	{
@@ -190,28 +196,28 @@ int main(int argc, char** argv)
 		init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
 	}
 
-	move(0, 0);
+	move(top_pad, left_pad);
 	set_color_as(1);
 	printw("+");
 	for (j = 0; j < jc; j++)
 	{
 		printw("-+");
 	}
-	printw("\n");
-	for (i = 0; i < ic; i++)
+	for (i = 0; i < 2*ic; i++)
 	{
+		move(top_pad + i + 1, left_pad);
 		printw("|");
 		for (j = 0; j < jc; j++)
 		{
 			printw(" |");
 		}
-		printw("\n");
+		i++;
+		move(top_pad + i + 1, left_pad);
 		printw("+");
 		for (j = 0; j < jc; j++)
 		{
 			printw("-+");
 		}
-		printw("\n");
 	}
 
 	int loci = 0;
@@ -226,16 +232,16 @@ int main(int argc, char** argv)
 				if (f[i][j] == 9)
 				{
 					set_color_as(3);
-					mvaddch(1 + 2*i, 1 + 2*j, 'P');
+					mvaddch(top_pad + 1 + 2*i, left_pad + 1 + 2*j, 'P');
 				}
 				else if (f[i][j] != -1)
 				{
 					set_color_as(2);
-					mvaddch(1 + 2*i, 1 + 2*j, f[i][j] + '0');
+					mvaddch(top_pad + 1 + 2*i, left_pad + 1 + 2*j, f[i][j] + '0');
 				}
 				else
 				{
-					mvaddch(1 + 2*i, 1 + 2*j, ' ');
+					mvaddch(top_pad + 1 + 2*i, left_pad + 1 + 2*j, ' ');
 				}
 			}
 		}
@@ -245,9 +251,9 @@ int main(int argc, char** argv)
 			locj = jc - 1;
 		}
 		set_color_as(4);
-		mvprintw(1 + ic*2, 1, "Bombs: %d    ", bombc);
+		mvprintw(top_pad + 1 + ic*2, left_pad + 1, "Bombs: %d    ", bombc);
 		refresh();
-		move(1 + loci*2, 1 + locj*2);
+		move(top_pad + 1 + loci*2, left_pad + 1 + locj*2);
 		char c = getch();
 
 		switch (c)
@@ -371,10 +377,10 @@ int main(int argc, char** argv)
 		}
 		if (i == ic)
 		{
-			mvprintw(1, 0, "+----------------+");
-			mvprintw(2, 0, "| WINNER WINNER  |");
-			mvprintw(3, 0, "| CHICKEN DINNER |");
-			mvprintw(4, 0, "+----------------+");
+			mvprintw(top_pad + 1, left_pad, "+----------------+");
+			mvprintw(top_pad + 2, left_pad, "| WINNER WINNER  |");
+			mvprintw(top_pad + 3, left_pad, "| CHICKEN DINNER |");
+			mvprintw(top_pad + 4, left_pad, "+----------------+");
 			refresh();
 			getch();
 			break;
@@ -382,9 +388,9 @@ int main(int argc, char** argv)
 
 		if (c == 'q')
 		{
-			mvprintw(1, 0, "+------------+");
-			mvprintw(2, 0, "| GAME OVER! |");
-			mvprintw(3, 0, "+------------+");
+			mvprintw(top_pad + 1, left_pad, "+------------+");
+			mvprintw(top_pad + 2, left_pad, "| GAME OVER! |");
+			mvprintw(top_pad + 3, left_pad, "+------------+");
 			refresh();
 			getch();
 			break;
@@ -399,4 +405,5 @@ int main(int argc, char** argv)
 	refresh();
 	endwin();
 	//refresh();
+	return 0;
 }
