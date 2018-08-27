@@ -14,7 +14,7 @@ snake:
 all: minesweeper sudoku tetris snake
 
 clean:
-	rm bin/snake
-	rm bin/tetris
-	rm bin/sudoku
-	rm bin/minesweeper
+	rm $(OUTDIR)/snake
+	rm $(OUTDIR)/tetris
+	rm $(OUTDIR)/sudoku
+	rm $(OUTDIR)/minesweeper
