@@ -184,8 +184,8 @@ int main(int argc, char** argv)
 	noecho();
 	getmaxyx(win, y, x);
 
-	top_pad  = y/2 - 9;
-	left_pad = x/2 - 9;
+	top_pad  = y/2 - jc;
+	left_pad = x/2 - ic;
 
 	if (!black_and_white)
 	{
